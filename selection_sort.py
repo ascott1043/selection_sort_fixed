@@ -13,6 +13,30 @@ def multi_selection_sort_codebasics(arr, sort_by_list):
             if x != min_index:
                 elements[x], elements[min_index] = elements[min_index], elements[x]
 
+def multi_selection_sort(elements, sort_by_list):
+    """In my approach, initially sort the array by the first key (First Name).
+    Then I'll break the sorted array down into smaller arrays with matching keys
+    ex. the three elements where first name == Raj will be treated as an array of len 3
+    
+    from there I can do another selection sort of that 3-element array on key 2 (Last Name)
+    """
+    key_nbr = 0
+    for key in sort_by_list:
+        #Use a typical selection sort for the first key:
+        if key_nbr == 0:
+            selection_sort(elements, key)
+        #If we're sorting a second/third/etc key, we'll implement my method
+        else:
+            previous_key = sort_by_list[key_nbr - 1]
+            for x in range(len(elements)):
+                #If next element doesn't match previous key, skip
+                index_array = find_matching_values(elements, x, key, previous_key)
+                if not index_array:
+                    continue
+                #Otherwise, get the smaller array and do a selection sort against it
+                else:
+                    selection_sort_partial_array(elements, index_array, key)
+        key_nbr += 1
 
 def selection_sort(elements, key):
     """Basic selection sort for single dictionary key"""
@@ -25,7 +49,7 @@ def selection_sort(elements, key):
             elements[x], elements[min_index] = elements[min_index], elements[x]
 
 def selection_sort_partial_array(elements, index_array, key):
-    """Sorting partial array, index_array is a list of indexes that have matching
+    """Sorting partial array. index_array is a list of indexes that have matching
     values for the previous key.  For example if elements[1] and elements[2] both have
     a <First Name> key == 'Armaan', then the index_array sould be [1,2] """
     for x in index_array:
@@ -60,30 +84,6 @@ def find_matching_values(elements, index, key, previous_key):
         return new_array
 
         
-def multi_selection_sort(elements, sort_by_list):
-    """In my approach, initially sort the array by the first key (First Name).
-    Then I'll break the sorted array down into smaller arrays with matching keys
-    ex. the three elements where first name == Raj will be treated as an array of len 3
-    
-    from there I can do another selection sort of that 3-element array on key 2 (Last Name)
-    """
-    key_nbr = 0
-    for key in sort_by_list:
-        #Use a typical selection sort for the first key:
-        if key_nbr == 0:
-            selection_sort(elements, key)
-        #If we're sorting a second/third/etc key, we'll implement my method
-        else:
-            previous_key = sort_by_list[key_nbr - 1]
-            for x in range(len(elements)):
-                #If next element doesn't match previous key, skip
-                index_array = find_matching_values(elements, x, key, previous_key)
-                if not index_array:
-                    continue
-                #Otherwise, get the smaller array and do a selection sort against it
-                else:
-                    selection_sort_partial_array(elements, index_array, key)
-        key_nbr += 1
 
 if __name__ == '__main__':
     elements = [
